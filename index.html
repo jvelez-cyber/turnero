@@ -39,9 +39,16 @@
         import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
         try {
-            // Tu configuración de Firebase
+            // ============================================
+            // ⚠️ IMPORTANTE: REEMPLAZA LA API KEY AQUÍ ⚠️
+            // ============================================
+            // 1. Ve a: https://console.cloud.google.com/apis/credentials?project=yetski-7e2f9
+            // 2. Crea una nueva API Key o usa la existente (restringida)
+            // 3. Copia la API Key
+            // 4. Reemplaza "TU_NUEVA_API_KEY_AQUI" abajo con tu key real
+            
             const firebaseConfig = {
-                apiKey: "AIzaSyALpejLt4Pufcz8sdbPtLVvvJeTH_LvjJ8",
+                apiKey: "TU_NUEVA_API_KEY_AQUI",  // ⬅️⬅️⬅️ REEMPLAZA ESTO
                 authDomain: "yetski-7e2f9.firebaseapp.com",
                 projectId: "yetski-7e2f9",
                 storageBucket: "yetski-7e2f9.firebasestorage.app",
@@ -71,6 +78,6 @@
     </script>
 
     <!-- Módulo principal -->
-    <script type="module" src="./js/app.js?v=2.5"></script>
+    <script type="module" src="./js/app.js?v=3.1"></script>
 </body>
 </html>
