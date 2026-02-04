@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#FFD700">
+    <title>Turnero Jetskis Guatapé</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="./css/turnero.css?v=3.0">
+</head>
+
+<body>
+    <!-- Contenedor Principal -->
+    <div id="app">
+        <div class="loading-screen">
+            <div class="spinner-large"></div>
+            <p>Cargando turnero...</p>
+        </div>
+    </div>
+    
+    <!-- Contenedor de Modales -->
+    <div id="modals"></div>
+    
+    <!-- Contenedor de Alertas -->
+    <div id="alerts"></div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        console.log('🔥 Iniciando Firebase...');
+        
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+        import { getAuth } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+        try {
+            // Tu configuración de Firebase
+            const firebaseConfig = {
+                apiKey: "AIzaSyALpejLt4Pufcz8sdbPtLVvvJeTH_LvjJ8",
+                authDomain: "yetski-7e2f9.firebaseapp.com",
+                projectId: "yetski-7e2f9",
+                storageBucket: "yetski-7e2f9.firebasestorage.app",
+                messagingSenderId: "934715466675",
+                appId: "1:934715466675:web:7df45b8ecfa5a5fa9ae1c6"
+            };
+
+            console.log('🔥 Configuración:', firebaseConfig.projectId);
+
+            // Inicializar Firebase
+            const app = initializeApp(firebaseConfig);
+            console.log('✅ App inicializada');
+            
+            window.firebaseAuth = getAuth(app);
+            console.log('✅ Auth inicializado');
+            
+            window.firebaseDB = getFirestore(app);
+            console.log('✅ Firestore inicializado');
+            
+            console.log('✅✅✅ Firebase completamente inicializado');
+            
+        } catch (error) {
+            console.error('❌❌❌ Error inicializando Firebase:', error);
+            console.error('Stack:', error.stack);
+            alert('Error inicializando Firebase: ' + error.message);
+        }
+    </script>
+
+    <!-- Módulo principal -->
+    <script type="module" src="./js/app.js?v=2.5"></script>
+</body>
+</html>
