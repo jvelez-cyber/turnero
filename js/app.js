@@ -123,9 +123,9 @@ async function logout() {
 
 function startRealtimeListener() {
     const jetskisRef = collection(window.firebaseDB, 'jetskis');
-    const q = query(jetskisRef, orderBy('posicion', 'asc'));
     
-    APP.unsubscribe = onSnapshot(q, (snapshot) => {
+    // Sin orderBy para evitar problemas de índice
+    APP.unsubscribe = onSnapshot(jetskisRef, (snapshot) => {
         APP.jetskis = [];
         
         snapshot.forEach((doc) => {
@@ -135,11 +135,17 @@ function startRealtimeListener() {
             });
         });
         
+        // Ordenar en JavaScript por posición
+        APP.jetskis.sort((a, b) => a.posicion - b.posicion);
+        
         console.log(`📊 ${APP.jetskis.length} jetskis cargados`);
+        console.log('Jetskis:', APP.jetskis.map(j => `${j.posicion}. ${j.nombre}`).join(', '));
         renderJetskis();
     }, (error) => {
         console.error('Error en listener:', error);
-        showError('Error de conexión', 'Problemas al cargar los datos');
+        console.error('Código de error:', error.code);
+        console.error('Mensaje:', error.message);
+        showError('Error de conexión', 'Problemas al cargar los datos: ' + error.message);
     });
 }
 
@@ -148,6 +154,7 @@ function startRealtimeListener() {
 // ===========================
 
 function renderVisualizador() {
+    APP.mode = 'visualizador';
     const app = document.getElementById('app');
     
     app.innerHTML = `
@@ -186,6 +193,7 @@ function renderVisualizador() {
 }
 
 function renderAdmin() {
+    APP.mode = 'admin';
     const app = document.getElementById('app');
     
     app.innerHTML = `
@@ -246,6 +254,15 @@ function renderAdmin() {
             </div>
         </div>
     `;
+    
+    // Renderizar jetskis si ya están cargados
+    console.log('🔧 [ADMIN] Renderizado, llamando renderJetskis...');
+    if (APP.jetskis.length > 0) {
+        renderJetskis();
+    }
+    
+    // Actualizar reloj
+    updateClock();
 }
 
 function renderLoginScreen() {
@@ -326,20 +343,41 @@ function renderLoginScreen() {
 // ===========================
 
 function renderJetskis() {
-    const container = document.getElementById('jetskiList');
-    if (!container) return;
+    console.log('🎨 [RENDER] Iniciando renderJetskis...');
+    console.log('🎨 [RENDER] Modo actual:', APP.mode);
+    console.log('🎨 [RENDER] Cantidad de jetskis:', APP.jetskis.length);
     
+    const container = document.getElementById('jetskiList');
+    if (!container) {
+        console.error('❌ [RENDER] Container jetskiList NO ENCONTRADO');
+        return;
+    }
+    
+    console.log('✅ [RENDER] Container encontrado:', container);
+    
+    // Limpiar contenedor
     container.innerHTML = '';
     
     if (APP.jetskis.length === 0) {
+        console.warn('⚠️ [RENDER] No hay jetskis para mostrar');
         container.innerHTML = '<div class="no-data"><i class="fas fa-exclamation-circle"></i><br>No hay jetskis configurados</div>';
         return;
     }
     
+    console.log('🎨 [RENDER] Creando elementos...');
+    
+    // Usar DocumentFragment para renderizado más rápido
+    const fragment = document.createDocumentFragment();
+    
     APP.jetskis.forEach((jetski, index) => {
         const row = createJetskiRow(jetski, index);
-        container.appendChild(row);
+        fragment.appendChild(row);
     });
+    
+    // Agregar todos los elementos de una vez
+    container.appendChild(fragment);
+    
+    console.log(`✅ [RENDER] ${APP.jetskis.length} jetskis renderizados exitosamente`);
 }
 
 function createJetskiRow(jetski, index) {
