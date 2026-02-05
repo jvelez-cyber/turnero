@@ -375,7 +375,7 @@ function createJetskiRow(jetski, index) {
                     ↓
                 </button>
                 <button class="move-button toggle-status" onclick="window.toggleEstado('${jetski.firebaseId}')">
-                    ${jetski.estado === 'EN TURNO' ? 'Embarcar' : 'En Turno'}
+                    ${jetski.estado === 'EN TURNO' ? '⛵ Embarcar' : '🚤 Zarpar'}
                 </button>
             </div>
         `;
@@ -449,12 +449,40 @@ async function toggleEstado(firebaseId) {
     const nuevoEstado = jetski.estado === 'EN TURNO' ? 'EMBARCANDO' : 'EN TURNO';
     
     try {
-        await updateDoc(doc(window.firebaseDB, 'jetskis', firebaseId), {
-            estado: nuevoEstado,
-            fechaActualizacion: new Date()
-        });
-        
-        showSuccess('Estado actualizado', `${jetski.nombre} → ${nuevoEstado}`);
+        // Si está pasando de EMBARCANDO a EN TURNO (ZARPAR), moverlo al final
+        if (jetski.estado === 'EMBARCANDO' && nuevoEstado === 'EN TURNO') {
+            const batch = writeBatch(window.firebaseDB);
+            
+            // Obtener la posición máxima actual
+            const maxPosicion = Math.max(...APP.jetskis.map(j => j.posicion));
+            
+            // Actualizar estado y mover al final
+            batch.update(doc(window.firebaseDB, 'jetskis', firebaseId), {
+                estado: nuevoEstado,
+                posicion: maxPosicion + 1,
+                fechaActualizacion: new Date()
+            });
+            
+            // Reordenar todos para que queden consecutivos
+            const otherJetskis = APP.jetskis.filter(j => j.firebaseId !== firebaseId);
+            otherJetskis.forEach((j, index) => {
+                batch.update(doc(window.firebaseDB, 'jetskis', j.firebaseId), {
+                    posicion: index + 1
+                });
+            });
+            
+            await batch.commit();
+            showSuccess('🚤 Zarpó exitosamente', `${jetski.nombre} → Final de la cola`);
+            
+        } else {
+            // Solo cambiar estado sin mover posición (EN TURNO → EMBARCANDO)
+            await updateDoc(doc(window.firebaseDB, 'jetskis', firebaseId), {
+                estado: nuevoEstado,
+                fechaActualizacion: new Date()
+            });
+            
+            showSuccess('⛵ Embarcando ahora', `${jetski.nombre} → ${nuevoEstado}`);
+        }
     } catch (error) {
         console.error('Error:', error);
         showError('Error', 'No se pudo cambiar el estado');
