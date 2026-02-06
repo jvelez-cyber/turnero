@@ -154,6 +154,7 @@ function startRealtimeListener() {
 // ===========================
 
 function renderVisualizador() {
+    console.log('📺 [VISUALIZADOR] Renderizando vista pública...');
     APP.mode = 'visualizador';
     const app = document.getElementById('app');
     
@@ -190,6 +191,17 @@ function renderVisualizador() {
             </button>
         </div>
     `;
+    
+    // Renderizar jetskis si ya están cargados
+    console.log('📺 [VISUALIZADOR] Jetskis en memoria:', APP.jetskis.length);
+    if (APP.jetskis.length > 0) {
+        console.log('📺 [VISUALIZADOR] Renderizando jetskis...');
+        setTimeout(() => renderJetskis(), 50);
+    }
+    
+    // Actualizar reloj
+    setTimeout(() => updateClock(), 50);
+    console.log('✅ [VISUALIZADOR] Vista pública renderizada');
 }
 
 function renderAdmin() {
@@ -794,10 +806,34 @@ window.switchToVisualizador = () => {
     renderVisualizador();
 };
 window.handleLogout = async () => {
-    const result = await logout();
-    if (result.success) {
-        APP.mode = 'visualizador';
-        renderVisualizador();
+    console.log('🚪 [LOGOUT] Iniciando logout...');
+    
+    if (!confirm('¿Cerrar sesión?')) {
+        console.log('🚪 [LOGOUT] Cancelado por el usuario');
+        return;
+    }
+    
+    try {
+        console.log('🚪 [LOGOUT] Cerrando sesión en Firebase...');
+        const result = await logout();
+        
+        if (result.success) {
+            console.log('✅ [LOGOUT] Sesión cerrada exitosamente');
+            console.log('🔄 [LOGOUT] Cambiando a modo visualizador...');
+            APP.mode = 'visualizador';
+            
+            // Forzar render del visualizador
+            setTimeout(() => {
+                renderVisualizador();
+                console.log('✅ [LOGOUT] Visualizador renderizado');
+            }, 100);
+        } else {
+            console.error('❌ [LOGOUT] Error al cerrar sesión');
+            showError('Error', 'No se pudo cerrar sesión');
+        }
+    } catch (error) {
+        console.error('❌ [LOGOUT] Error inesperado:', error);
+        showError('Error', 'Error al cerrar sesión');
     }
 };
 window.moveUp = moveUp;
