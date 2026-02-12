@@ -12,10 +12,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- CSS -->
-    <link rel="stylesheet" href="./css/turnero.css?v=3.0">
+    <link rel="stylesheet" href="./css/turnero.css?v=5.1-FINAL">
 </head>
 
 <body>
+    <!-- SLIDESHOW DE FONDO DE GUATAPÉ -->
+    <div class="background-slideshow">
+        <div class="bg-slide active" style="background-image: url('./img/guatape-1.jpg')"></div>
+        <div class="bg-slide" style="background-image: url('./img/guatape-2.jpg')"></div>
+        <div class="bg-slide" style="background-image: url('./img/guatape-3.jpg')"></div>
+        <div class="bg-slide" style="background-image: url('./img/guatape-4.jpg')"></div>
+        <div class="bg-slide" style="background-image: url('./img/guatape-5.jpg')"></div>
+        <div class="bg-slide" style="background-image: url('./img/guatape-6.jpg')"></div>
+        <div class="bg-slide" style="background-image: url('./img/guatape-7.jpg')"></div>
+    </div>
+
     <!-- Contenedor Principal -->
     <div id="app">
         <div class="loading-screen">
@@ -70,7 +81,32 @@
         }
     </script>
 
+    <!-- Slideshow Script -->
+    <script>
+        console.log('🎬 Iniciando slideshow de Guatapé...');
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.bg-slide');
+        const totalSlides = slides.length;
+
+        function changeSlide() {
+            // Quitar clase active de todas
+            slides.forEach(slide => slide.classList.remove('active'));
+            
+            // Avanzar al siguiente slide
+            currentSlide = (currentSlide + 1) % totalSlides;
+            
+            // Activar el nuevo slide
+            slides[currentSlide].classList.add('active');
+            
+            console.log(`📸 Imagen ${currentSlide + 1}/${totalSlides} - ${slides[currentSlide].style.backgroundImage}`);
+        }
+
+        // Cambiar cada 8 segundos
+        setInterval(changeSlide, 8000);
+        console.log(`✅ Slideshow configurado: ${totalSlides} imágenes, cambio cada 8 segundos`);
+    </script>
+
     <!-- Módulo principal -->
-    <script type="module" src="./js/app.js?v=3.3"></script>
+    <script type="module" src="./js/app.js?v=5.1-FINAL"></script>
 </body>
 </html>
