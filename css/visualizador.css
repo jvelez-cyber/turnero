@@ -1,0 +1,68 @@
+/* ===========================
+   ESTILOS VISUALIZADOR PÚBLICO
+   =========================== */
+
+.visualizador-container {
+    min-height: 100vh;
+    background: #000;
+}
+
+/* Botón de acceso admin */
+.admin-access-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 215, 0, 0.2);
+    border: 2px solid #FFD700;
+    border-radius: 50%;
+    color: #FFD700;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-access-btn:hover {
+    background: rgba(255, 215, 0, 0.4);
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+/* Jetski row en modo visualizador */
+.visualizador-container .jetski-row {
+    cursor: default;
+}
+
+.visualizador-container .jetski-row:hover {
+    transform: none;
+}
+
+/* Animación especial para embarcando en visualizador */
+.visualizador-container .jetski-row.embarcando {
+    animation: visualizador-embarcando 1.5s ease-in-out infinite;
+}
+
+@keyframes visualizador-embarcando {
+    0%, 100% {
+        box-shadow: 0 0 10px #0066ff;
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 25px #0066ff;
+        transform: scale(1.02);
+    }
+}
+
+/* Responsive visualizador */
+@media (max-width: 768px) {
+    .admin-access-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+}
