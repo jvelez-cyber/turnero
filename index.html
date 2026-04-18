@@ -6,84 +6,526 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#FFD700">
-    <title>Turnero Jetskis Guatapé</title>
-    
+    <title>Jetskis Guatapé — Turnero en Vivo</title>
+    <meta name="description" content="Alquila una moto acuática en la Represa de Guatapé. Consulta el turnero en vivo.">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- CSS -->
-    <link rel="stylesheet" href="./css/turnero.css?v=6.0">
+    <!-- CSS del Turnero -->
+    <link rel="stylesheet" href="./css/turnero.css?v=7.0">
     <link rel="stylesheet" href="./css/reportes.css?v=1.0">
-    
+
     <style>
-        /* Fondo oscuro simple sin imágenes */
-        body {
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+        /* ══════════════════════════════════
+           LANDING — estilos propios
+        ══════════════════════════════════ */
+        html { scroll-behavior: smooth; }
+
+        /* Variables landing */
+        :root {
+            --ly: #FFD700;
+            --lr: #E8001D;
+            --ldark: #060a0f;
+            --ldark2: #0c1420;
+        }
+
+        /* ── HERO ── */
+        .hero {
+            position: relative; height: 100vh; min-height: 580px;
+            display: flex; flex-direction: column; justify-content: flex-end;
+            overflow: hidden;
+        }
+        .hero-bar {
+            position: absolute; top:0; left:0; right:0; height:4px; z-index:10;
+            background: linear-gradient(90deg, var(--ly), var(--lr), var(--ly));
+            background-size: 200% 100%;
+            animation: heroBarAnim 3s linear infinite;
+        }
+        @keyframes heroBarAnim { from{background-position:0%} to{background-position:200%} }
+
+        .slides { position:absolute; inset:0; z-index:0; }
+        .slide  { position:absolute; inset:0; opacity:0; transition:opacity 1.4s ease; }
+        .slide.active { opacity:1; }
+        .slide img {
+            width:100%; height:100%; object-fit:cover; object-position:center 30%;
+            filter: contrast(1.1) saturate(1.25) brightness(0.82);
+        }
+        .slide:nth-child(1) img { animation: kb1 14s ease-in-out infinite alternate; }
+        .slide:nth-child(2) img { animation: kb2 14s ease-in-out infinite alternate; }
+        .slide:nth-child(3) img { animation: kb3 14s ease-in-out infinite alternate; }
+        .slide:nth-child(4) img { animation: kb4 14s ease-in-out infinite alternate; }
+        .slide:nth-child(5) img { animation: kb5 14s ease-in-out infinite alternate; }
+        @keyframes kb1 { from{transform:scale(1.0) translate(0,0)}   to{transform:scale(1.07) translate(-1.5%,-1%)} }
+        @keyframes kb2 { from{transform:scale(1.06) translate(1%,0)} to{transform:scale(1.0) translate(-1%,1%)} }
+        @keyframes kb3 { from{transform:scale(1.0) translate(0,1%)}  to{transform:scale(1.07) translate(1%,-1%)} }
+        @keyframes kb4 { from{transform:scale(1.07) translate(-1%,0)}to{transform:scale(1.0) translate(1%,0)} }
+        @keyframes kb5 { from{transform:scale(1.0) translate(1%,0)}  to{transform:scale(1.06) translate(-1%,1%)} }
+
+        .hero::after {
+            content:''; position:absolute; inset:0; z-index:1;
+            background:
+                linear-gradient(to right, rgba(6,10,15,.72) 0%, rgba(6,10,15,.1) 55%, transparent 100%),
+                linear-gradient(to bottom, rgba(6,10,15,.25) 0%, transparent 35%, rgba(6,10,15,.92) 100%);
+        }
+
+        .topbar {
+            position:absolute; top:0; left:0; right:0; z-index:5;
+            display:flex; justify-content:space-between; align-items:center;
+            padding:1.8rem 5vw;
+        }
+        .logo { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:1.2rem; letter-spacing:3px; text-transform:uppercase; color:#fff; }
+        .logo span { color:var(--ly); }
+        .live-tag {
+            display:flex; align-items:center; gap:7px;
+            background:rgba(0,0,0,.4); border:1px solid rgba(255,255,255,.12);
+            padding:6px 14px; border-radius:100px;
+            font-size:.72rem; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+            color:rgba(255,255,255,.65); backdrop-filter:blur(8px);
+        }
+        .live-dot { width:7px;height:7px;background:#00e676;border-radius:50%;box-shadow:0 0 8px #00e676;animation:ldotBlink 1.5s infinite; }
+        @keyframes ldotBlink { 0%,100%{opacity:1}50%{opacity:.2} }
+
+        .hero-content { position:relative; z-index:3; padding:0 5vw 6vh; max-width:760px; }
+        .eyebrow { display:flex; align-items:center; gap:10px; margin-bottom:1.1rem; }
+        .ebar { width:28px; height:3px; background:var(--ly); border-radius:2px; }
+        .etxt { font-family:'Barlow Condensed',sans-serif; font-size:.82rem; font-weight:700; letter-spacing:4px; text-transform:uppercase; color:rgba(255,255,255,.5); }
+
+        .hero-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; text-transform:uppercase; line-height:.87; margin-bottom:1.4rem; }
+        .ht1 { display:block; font-size:clamp(4rem,10.5vw,8rem); color:#fff; letter-spacing:-1px; }
+        .ht2 { display:block; font-size:clamp(4rem,10.5vw,8rem); color:var(--ly); letter-spacing:-1px; text-shadow:0 0 50px rgba(255,215,0,.3); }
+
+        .hero-desc { font-size:clamp(.88rem,1.5vw,1rem); color:rgba(255,255,255,.55); line-height:1.7; margin-bottom:2.2rem; max-width:400px; }
+        .hero-desc strong { color:rgba(255,255,255,.9); font-weight:600; }
+
+        .btn-cta {
+            display:inline-flex; align-items:center; gap:12px;
+            background:var(--ly); color:#000;
+            font-family:'Barlow Condensed',sans-serif; font-size:1rem; font-weight:900;
+            letter-spacing:3px; text-transform:uppercase;
+            padding:14px 34px; text-decoration:none; border:none; cursor:pointer;
+            transition:all .2s;
+            clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
+        }
+        .btn-cta:hover { background:#fff; gap:18px; }
+
+        .slide-dots { position:absolute; bottom:2.5rem; right:5vw; z-index:5; display:flex; gap:6px; }
+        .sdot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.3); border:none; cursor:pointer; padding:0; transition:all .3s; }
+        .sdot.active { background:var(--ly); transform:scale(1.4); }
+
+        /* ── EXPERIENCIA ── */
+        .exp-section {
+            background: var(--ldark2); padding: 5rem 5vw;
+            border-top: 1px solid rgba(255,255,255,.05);
+        }
+        .exp-grid { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; }
+        .video-col { display:flex; flex-direction:column; gap:12px; }
+        .video-showcase {
+            position:relative; border-radius:16px; overflow:hidden;
+            aspect-ratio:9/16; background:#000; max-height:420px;
+            box-shadow:0 20px 60px rgba(0,0,0,.7), 0 0 0 1px rgba(255,215,0,.1);
+        }
+        .video-showcase video {
+            width:100%; height:100%; object-fit:cover; display:none;
+            filter:blur(0.9px) contrast(1.22) saturate(1.4) brightness(0.88);
+            transform:scale(1.04);
+        }
+        .video-showcase video.active { display:block; }
+        .video-showcase::before {
+            content:''; position:absolute; inset:0; z-index:2; pointer-events:none;
+            background:radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,.55) 100%),
+                       linear-gradient(to bottom, rgba(0,0,0,.2) 0%, transparent 30%, transparent 70%, rgba(0,0,0,.5) 100%);
+        }
+        .video-showcase::after {
+            content:''; position:absolute; inset:0; z-index:3; pointer-events:none;
+            background:linear-gradient(180deg, rgba(20,10,0,.18) 0%, rgba(255,140,0,.06) 50%, rgba(0,10,30,.25) 100%);
+        }
+        .video-indicators { display:flex; gap:8px; justify-content:center; }
+        .vi-dot { height:3px; border-radius:2px; background:rgba(255,255,255,.2); cursor:pointer; transition:all .4s; flex:1; max-width:60px; }
+        .vi-dot.active { background:var(--ly); }
+
+        .exp-text { display:flex; flex-direction:column; gap:1.8rem; }
+        .exp-eyebrow {
+            display:flex; align-items:center; gap:10px;
+            font-family:'Barlow Condensed',sans-serif; font-weight:700;
+            font-size:.78rem; letter-spacing:4px; text-transform:uppercase; color:rgba(255,255,255,.35);
+        }
+        .exp-eyebrow::before { content:''; width:24px; height:2px; background:var(--ly); border-radius:1px; }
+        .exp-title {
+            font-family:'Barlow Condensed',sans-serif; font-weight:900;
+            font-size:clamp(2.2rem,4vw,3.2rem); text-transform:uppercase; line-height:.92; letter-spacing:-1px;
+        }
+        .exp-title span { color:var(--ly); display:block; }
+        .exp-desc {
+            font-size:1rem; color:rgba(255,255,255,.55); line-height:1.75;
+            max-width:440px; border-left:2px solid rgba(255,215,0,.25); padding-left:1.2rem;
+        }
+        .exp-features { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+        .exp-feat {
+            display:flex; align-items:center; gap:10px;
+            background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.07);
+            border-radius:8px; padding:.7rem 1rem;
+        }
+        .exp-feat-icon { font-size:1.3rem; flex-shrink:0; }
+        .exp-feat-text { display:flex; flex-direction:column; gap:1px; }
+        .exp-feat-label { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:.85rem; text-transform:uppercase; letter-spacing:1px; color:#fff; }
+        .exp-feat-sub { font-size:.7rem; color:rgba(255,255,255,.35); }
+
+        /* ── FRASES ── */
+        .frases-section {
+            background:var(--ldark); padding:5rem 5vw;
+            position:relative; overflow:hidden; text-align:center;
+        }
+        .frases-section::before, .frases-section::after {
+            content:''; position:absolute; left:0; right:0; height:1px;
+            background:linear-gradient(90deg, transparent, rgba(255,215,0,.3) 30%, rgba(255,215,0,.3) 70%, transparent);
+        }
+        .frases-section::before { top:0; }
+        .frases-section::after  { bottom:0; }
+        .frases-glow {
+            position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+            width:600px; height:300px; border-radius:50%;
+            background:radial-gradient(ellipse, rgba(255,215,0,.04) 0%, transparent 70%);
+            pointer-events:none;
+        }
+        .frase-wrap { position:relative; z-index:1; min-height:120px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.2rem; }
+        .frase-quote { font-size:1.8rem; color:rgba(255,215,0,.2); line-height:1; font-family:'Barlow Condensed',sans-serif; font-weight:900; }
+        .frase-text {
+            font-family:'Barlow Condensed',sans-serif; font-weight:900;
+            font-size:clamp(1.6rem,3.5vw,2.4rem); text-transform:uppercase;
+            letter-spacing:1px; line-height:1.15; color:#fff;
+            animation:fraseIn 0.6s ease forwards;
+        }
+        .frase-text em { color:var(--ly); font-style:normal; }
+        @keyframes fraseIn { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+        .frase-author { font-size:.72rem; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,.25); }
+        .frase-dots { display:flex; gap:8px; justify-content:center; margin-top:.5rem; }
+        .frase-dot { width:6px; height:6px; border-radius:50%; background:rgba(255,215,0,.2); border:none; cursor:pointer; padding:0; transition:all .3s; }
+        .frase-dot.active { background:var(--ly); transform:scale(1.3); }
+
+        .photo-strip { position:relative; overflow:hidden; margin-top:3.5rem; height:180px; }
+        .photo-strip::before, .photo-strip::after { content:''; position:absolute; top:0; bottom:0; width:120px; z-index:2; pointer-events:none; }
+        .photo-strip::before { left:0;  background:linear-gradient(90deg, var(--ldark), transparent); }
+        .photo-strip::after  { right:0; background:linear-gradient(-90deg, var(--ldark), transparent); }
+        .photo-track { display:flex; gap:10px; width:max-content; animation:photoScroll 35s linear infinite; }
+        .photo-track:hover { animation-play-state:paused; }
+        @keyframes photoScroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+        .photo-track img { height:180px; width:auto; min-width:240px; object-fit:cover; border-radius:10px; filter:saturate(1.2) brightness(0.85); transition:all .3s; }
+        .photo-track img:hover { filter:saturate(1.4) brightness(1); transform:scale(1.03); }
+
+        /* ── CTA TURNERO ── */
+        .cta-turnero {
+            background:#07090e; padding:5rem 5vw; text-align:center;
+            border-top:1px solid rgba(255,215,0,.1); position:relative; overflow:hidden;
+        }
+        .cta-glow {
+            position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+            width:500px; height:250px; border-radius:50%;
+            background:radial-gradient(ellipse, rgba(255,215,0,.05) 0%, transparent 70%);
+            pointer-events:none;
+        }
+        .cta-eyebrow {
+            font-family:'Barlow Condensed',sans-serif; font-weight:700;
+            font-size:.8rem; letter-spacing:4px; text-transform:uppercase;
+            color:rgba(255,255,255,.3); margin-bottom:1.2rem;
+        }
+        .cta-title {
+            font-family:'Barlow Condensed',sans-serif; font-weight:900;
+            font-size:clamp(2rem,4vw,3rem); text-transform:uppercase; letter-spacing:-1px; margin-bottom:.6rem;
+        }
+        .cta-title span { color:var(--ly); }
+        .cta-sub { font-size:.95rem; color:rgba(255,255,255,.4); margin-bottom:2.5rem; }
+        .btn-cta-big {
+            display:inline-flex; align-items:center; gap:14px;
+            background:var(--ly); color:#000;
+            font-family:'Barlow Condensed',sans-serif; font-size:1.1rem; font-weight:900;
+            letter-spacing:3px; text-transform:uppercase;
+            padding:18px 48px; text-decoration:none;
+            clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+            transition:all .2s;
+        }
+        .btn-cta-big:hover { background:#fff; }
+
+        /* ── SEPARADOR ANTES DEL TURNERO ── */
+        .turnero-anchor {
+            background:var(--ldark);
+            padding:2.5rem 5vw 0;
+            display:flex; align-items:center; gap:1.5rem;
+        }
+        .turnero-anchor-line { flex:1; height:1px; background:rgba(255,215,0,.15); }
+        .turnero-anchor-label {
+            font-family:'Barlow Condensed',sans-serif; font-weight:700;
+            font-size:.7rem; letter-spacing:4px; text-transform:uppercase;
+            color:rgba(255,215,0,.4);
+        }
+
+        /* ── RESPONSIVE LANDING ── */
+        @media(max-width:768px) {
+            .exp-grid { grid-template-columns:1fr; gap:2.5rem; }
+            .video-showcase { aspect-ratio:16/9; max-height:240px; }
+            .exp-features { grid-template-columns:1fr; }
         }
     </style>
 </head>
-
 <body>
-    <!-- Contenedor Principal -->
-    <div id="app">
-        <div class="loading-screen">
-            <div class="spinner-large"></div>
-            <p>Cargando turnero...</p>
+
+<!-- ════════════════════════════════
+     LANDING — HERO
+════════════════════════════════ -->
+<section class="hero">
+    <div class="hero-bar"></div>
+    <div class="slides">
+        <div class="slide active"><img src="fotos/WhatsApp Image 2026-04-17 at 1.02.11 PM (1).jpeg" alt="Jetski en Guatapé"></div>
+        <div class="slide"><img src="fotos/WhatsApp Image 2026-04-17 at 1.02.10 PM (1).jpeg" alt="Moto acuática Represa Guatapé"></div>
+        <div class="slide"><img src="fotos/WhatsApp Image 2026-04-17 at 1.02.11 PM (2).jpeg" alt="Aventura acuática Guatapé"></div>
+        <div class="slide"><img src="fotos/WhatsApp Image 2026-04-17 at 1.02.10 PM.jpeg" alt="Jetski Represa de Guatapé"></div>
+        <div class="slide"><img src="fotos/WhatsApp Image 2026-04-17 at 1.02.09 PM.jpeg" alt="Motos acuáticas Guatapé"></div>
+    </div>
+    <div class="topbar">
+        <div class="logo">Jetskis <span>Guatapé</span></div>
+        <div class="live-tag"><span class="live-dot"></span>Represa de Guatapé</div>
+    </div>
+    <div class="hero-content">
+        <div class="eyebrow"><div class="ebar"></div><span class="etxt">Represa de Guatapé · Oriente Antioqueño</span></div>
+        <h1 class="hero-title">
+            <span class="ht1">Jetski en</span>
+            <span class="ht2">Guatapé</span>
+        </h1>
+        <p class="hero-desc">
+            Sube a un jetski y vive la experiencia en las aguas de la
+            <strong>Represa de Guatapé</strong>. La aventura más emocionante del Oriente Antioqueño.
+        </p>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;">
+            <a href="#turnero" class="btn-cta" style="font-size:1.05rem;padding:16px 38px;">
+                <svg width="22" height="14" viewBox="0 0 120 52" fill="none" style="flex-shrink:0"><path d="M12 34 Q18 24 34 22 L72 18 Q92 16 108 24 L114 30 Q117 35 112 39 L96 43 Q78 47 50 47 Q26 47 15 43 Q9 40 12 34Z" fill="#000"/><path d="M42 19 L74 16 Q88 15 93 21 L91 23 Q77 18 72 19 L40 23Z" fill="rgba(0,0,0,.35)"/></svg>
+                Ver Turnero
+            </a>
+            <a href="#experiencia" style="display:inline-flex;align-items:center;gap:8px;color:rgba(255,255,255,.5);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.85rem;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='rgba(255,255,255,.9)'" onmouseout="this.style.color='rgba(255,255,255,.5)'">
+                Ver más &nbsp;↓
+            </a>
         </div>
     </div>
-    
-    <!-- Contenedor de Modales -->
-    <div id="modals"></div>
-    
-    <!-- Contenedor de Alertas -->
-    <div id="alerts"></div>
+    <div class="slide-dots" id="dots"></div>
+</section>
 
-    <!-- Firebase SDK -->
-    <script type="module">
-        console.log('🔥 Iniciando Firebase...');
-        
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-        import { getAuth } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-        import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+<!-- ════════════════════════════════
+     LANDING — EXPERIENCIA
+════════════════════════════════ -->
+<section class="exp-section" id="experiencia">
+    <div class="exp-grid">
+        <div class="video-col">
+            <div class="video-showcase">
+                <video class="active" muted loop autoplay playsinline>
+                    <source src="videos/WhatsApp Video 2026-04-17 at 1.02.09 PM.mp4" type="video/mp4">
+                </video>
+                <video muted loop playsinline>
+                    <source src="videos/WhatsApp Video 2026-04-17 at 1.02.10 PM.mp4" type="video/mp4">
+                </video>
+                <video muted loop playsinline>
+                    <source src="videos/WhatsApp Video 2026-04-17 at 1.02.11 PM.mp4" type="video/mp4">
+                </video>
+                <video muted loop playsinline>
+                    <source src="videos/WhatsApp Video 2026-04-17 at 1.02.11 PM (1).mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="video-indicators" id="videoIndicators"></div>
+        </div>
+        <div class="exp-text">
+            <div class="exp-eyebrow">Represa de Guatapé · Oriente Antioqueño</div>
+            <h2 class="exp-title">
+                La aventura<br>más extrema
+                <span>de Guatapé</span>
+            </h2>
+            <p class="exp-desc">
+                Sube a una moto acuática y recorre las aguas cristalinas de la Represa de Guatapé.
+                Vive una experiencia única a toda velocidad, rodeado de naturaleza y el paisaje antioqueño.
+            </p>
+            <div class="exp-features">
+                <div class="exp-feat"><div class="exp-feat-icon">⏱</div><div class="exp-feat-text"><div class="exp-feat-label">Desde 30 min</div><div class="exp-feat-sub">Hasta todo el día</div></div></div>
+                <div class="exp-feat"><div class="exp-feat-icon">👥</div><div class="exp-feat-text"><div class="exp-feat-label">1 a 2 personas</div><div class="exp-feat-sub">Por moto acuática</div></div></div>
+                <div class="exp-feat"><div class="exp-feat-icon">🌊</div><div class="exp-feat-text"><div class="exp-feat-label">Aguas abiertas</div><div class="exp-feat-sub">Represa de Guatapé</div></div></div>
+                <div class="exp-feat"><div class="exp-feat-icon">📅</div><div class="exp-feat-text"><div class="exp-feat-label">Todos los días</div><div class="exp-feat-sub">Disponibilidad abierta</div></div></div>
+            </div>
+        </div>
+    </div>
+</section>
 
-        try {
-            // Configuración de Firebase
-            const firebaseConfig = {
-                apiKey: "AIzaSyDwePqCjzpGfJyAbxYo966Ml6HbJeziqPE",
-                authDomain: "yetski-7e2f9.firebaseapp.com",
-                projectId: "yetski-7e2f9",
-                storageBucket: "yetski-7e2f9.firebasestorage.app",
-                messagingSenderId: "934715466675",
-                appId: "1:934715466675:web:7df45b8ecfa5a5fa9ae1c6"
-            };
+<!-- ════════════════════════════════
+     LANDING — FRASES + FOTOS
+════════════════════════════════ -->
+<section class="frases-section">
+    <div class="frases-glow"></div>
+    <div class="frase-wrap">
+        <div class="frase-quote">"</div>
+        <div class="frase-text" id="fraseText">Donde el agua, el viento y la <em>adrenalina</em> se encuentran</div>
+        <div class="frase-author">Represa de Guatapé · Oriente Antioqueño</div>
+        <div class="frase-dots" id="fraseDots"></div>
+    </div>
+    <div class="photo-strip">
+        <div class="photo-track">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.11 PM (1).jpeg" alt="">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.10 PM (1).jpeg" alt="">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.11 PM (2).jpeg" alt="">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.09 PM (1).jpeg" alt="">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.09 PM (2).jpeg" alt="">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.09 PM (3).jpeg" alt="">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.09 PM (4).jpeg" alt="">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.10 PM (2).jpeg" alt="">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.10 PM (3).jpeg" alt="">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.10 PM (4).jpeg" alt="">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.11 PM (3).jpeg" alt="">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.11 PM (1).jpeg" alt="">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.10 PM (1).jpeg" alt="">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.11 PM (2).jpeg" alt="">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.09 PM (1).jpeg" alt="">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.09 PM (2).jpeg" alt="">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.09 PM (3).jpeg" alt="">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.09 PM (4).jpeg" alt="">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.10 PM (2).jpeg" alt="">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.10 PM (3).jpeg" alt="">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.10 PM (4).jpeg" alt="">
+            <img src="fotos/WhatsApp Image 2026-04-17 at 1.02.11 PM (3).jpeg" alt="">
+        </div>
+    </div>
+</section>
 
-            console.log('🔥 Configuración:', firebaseConfig.projectId);
+<!-- ════════════════════════════════
+     CTA — BAJAR AL TURNERO
+════════════════════════════════ -->
+<section class="cta-turnero">
+    <div class="cta-glow"></div>
+    <p class="cta-eyebrow">Represa de Guatapé · Sistema de Turnos en Vivo</p>
+    <h2 class="cta-title">¿Listo para <span>zarpar?</span></h2>
+    <p class="cta-sub">Consulta el turno de tu empresa en tiempo real</p>
+    <a href="#turnero" class="btn-cta-big">
+        <svg width="26" height="16" viewBox="0 0 120 52" fill="none"><path d="M12 34 Q18 24 34 22 L72 18 Q92 16 108 24 L114 30 Q117 35 112 39 L96 43 Q78 47 50 47 Q26 47 15 43 Q9 40 12 34Z" fill="#000"/></svg>
+        Ver Turnero en Vivo
+    </a>
+</section>
 
-            // Inicializar Firebase
-            const app = initializeApp(firebaseConfig);
-            console.log('✅ App inicializada');
-            
-            window.firebaseAuth = getAuth(app);
-            console.log('✅ Auth inicializado');
-            
-            window.firebaseDB = getFirestore(app);
-            console.log('✅ Firestore inicializado');
-            
-            console.log('✅✅✅ Firebase completamente inicializado');
-            
-        } catch (error) {
-            console.error('❌❌❌ Error inicializando Firebase:', error);
-            console.error('Stack:', error.stack);
-            alert('Error inicializando Firebase: ' + error.message);
-        }
-    </script>
+<!-- ════════════════════════════════
+     SEPARADOR
+════════════════════════════════ -->
+<div class="turnero-anchor" id="turnero">
+    <div class="turnero-anchor-line"></div>
+    <div class="turnero-anchor-label">⬇ Turnero en Vivo</div>
+    <div class="turnero-anchor-line"></div>
+</div>
 
-    <!-- Módulos de Ventas -->
-    <script type="module" src="./js/zarpar-modal.js?v=1.0"></script>
-    <script type="module" src="./js/ventas.js?v=1.0"></script>
-    <script type="module" src="./js/reportes-ui.js?v=1.0"></script>
+<!-- ════════════════════════════════
+     TURNERO — APP FIREBASE
+════════════════════════════════ -->
+<div id="app">
+    <div class="loading-screen">
+        <div class="spinner-large"></div>
+        <p>Cargando turnero...</p>
+    </div>
+</div>
 
-    <!-- Módulo principal -->
-    <script type="module" src="./js/app.js?v=6.0-VENTAS"></script>
+<div id="modals"></div>
+<div id="alerts"></div>
+
+<!-- ════════════════════════════════
+     SCRIPTS — LANDING
+════════════════════════════════ -->
+<script>
+// Slideshow hero
+const slides = document.querySelectorAll('.slide');
+const dotsEl = document.getElementById('dots');
+let curSlide = 0;
+slides.forEach((_,i) => {
+    const d = document.createElement('button');
+    d.className = 'sdot' + (i===0?' active':'');
+    d.onclick = () => goToSlide(i);
+    dotsEl.appendChild(d);
+});
+function goToSlide(n) {
+    slides[curSlide].classList.remove('active');
+    dotsEl.querySelectorAll('.sdot')[curSlide].classList.remove('active');
+    curSlide = n;
+    slides[curSlide].classList.add('active');
+    dotsEl.querySelectorAll('.sdot')[curSlide].classList.add('active');
+}
+setInterval(() => goToSlide((curSlide+1) % slides.length), 5000);
+
+// Video rotativo
+const videos  = document.querySelectorAll('.video-showcase video');
+const indWrap = document.getElementById('videoIndicators');
+let curVideo  = 0;
+videos.forEach((_,i) => {
+    const d = document.createElement('div');
+    d.className = 'vi-dot' + (i===0?' active':'');
+    d.onclick = () => goToVideo(i);
+    indWrap.appendChild(d);
+});
+function goToVideo(n) {
+    videos[curVideo].classList.remove('active');
+    videos[curVideo].pause();
+    indWrap.querySelectorAll('.vi-dot')[curVideo].classList.remove('active');
+    curVideo = n;
+    videos[curVideo].classList.add('active');
+    videos[curVideo].play().catch(()=>{});
+    indWrap.querySelectorAll('.vi-dot')[curVideo].classList.add('active');
+}
+videos[0].play().catch(()=>{});
+setInterval(() => goToVideo((curVideo+1) % videos.length), 8000);
+
+// Frases rotativas
+const frases = [
+    { txt: 'Donde el agua, el viento y la <em>adrenalina</em> se encuentran' },
+    { txt: 'Navega las aguas que rodean la imponente <em>Piedra del Peñol</em>' },
+    { txt: 'Velocidad, libertad y <em>naturaleza</em> en un solo lugar' },
+    { txt: 'La aventura acuática más extrema del <em>Oriente Antioqueño</em>' },
+    { txt: 'Siente el spray del agua y el cielo <em>sin límites</em>' },
+];
+const fraseEl  = document.getElementById('fraseText');
+const dotsWrap = document.getElementById('fraseDots');
+let curFrase = 0;
+frases.forEach((_,i) => {
+    const d = document.createElement('button');
+    d.className = 'frase-dot' + (i===0?' active':'');
+    d.onclick = () => goToFrase(i);
+    dotsWrap.appendChild(d);
+});
+function goToFrase(n) {
+    curFrase = n;
+    fraseEl.style.animation = 'none';
+    fraseEl.offsetHeight;
+    fraseEl.style.animation = '';
+    fraseEl.innerHTML = frases[n].txt;
+    dotsWrap.querySelectorAll('.frase-dot').forEach((d,i) => d.classList.toggle('active', i===n));
+}
+setInterval(() => goToFrase((curFrase+1) % frases.length), 4000);
+</script>
+
+<!-- ════════════════════════════════
+     SCRIPTS — FIREBASE + TURNERO
+════════════════════════════════ -->
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getAuth }       from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { getFirestore }  from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyDwePqCjzpGfJyAbxYo966Ml6HbJeziqPE",
+            authDomain: "yetski-7e2f9.firebaseapp.com",
+            projectId: "yetski-7e2f9",
+            storageBucket: "yetski-7e2f9.firebasestorage.app",
+            messagingSenderId: "934715466675",
+            appId: "1:934715466675:web:7df45b8ecfa5a5fa9ae1c6"
+        };
+        const app = initializeApp(firebaseConfig);
+        window.firebaseAuth = getAuth(app);
+        window.firebaseDB   = getFirestore(app);
+    } catch (error) {
+        console.error('❌ Error Firebase:', error);
+    }
+</script>
+<script type="module" src="./js/zarpar-modal.js?v=1.0"></script>
+<script type="module" src="./js/ventas.js?v=1.0"></script>
+<script type="module" src="./js/reportes-ui.js?v=1.0"></script>
+<script type="module" src="./js/app.js?v=7.0"></script>
+
 </body>
 </html>

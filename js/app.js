@@ -164,21 +164,30 @@ function renderVisualizador() {
     console.log('📺 [VISUALIZADOR] Renderizando vista pública...');
     APP.mode = 'visualizador';
     const app = document.getElementById('app');
-    
+
     app.innerHTML = `
         <div class="visualizador-container">
             <div class="header">
                 <div class="header-left">
                     <div class="header-icon">🚤</div>
-                    <div class="header-text">Turnero Jetskis Guatapé</div>
+                    <div class="header-text">Turnero en Vivo</div>
                 </div>
-                <div class="header-clock" id="headerClock">--:--:--</div>
+                <div class="header-right">
+                    <div class="live-indicator"><span class="ldot"></span>Represa de Guatapé</div>
+                    <div class="header-clock" id="headerClock">--:--:--</div>
+                    <a href="landing.html" class="back-btn"><i class="fas fa-arrow-left"></i> <span>Inicio</span></a>
+                </div>
             </div>
 
             <div class="main-container">
                 <div class="category-header">
-                    <i class="fas fa-water"></i>
-                    JETSKIS EN TURNO
+                    <span><i class="fas fa-water"></i>Jetskis en Turno</span>
+                    <span id="jetskiCount"></span>
+                </div>
+                <div class="timing-cols">
+                    <span>Pos</span>
+                    <span>Empresa</span>
+                    <span>Estado</span>
                 </div>
                 <div class="jetski-list" id="jetskiList">
                     <div class="no-data">
@@ -214,7 +223,7 @@ function renderVisualizador() {
 function renderAdmin() {
     APP.mode = 'admin';
     const app = document.getElementById('app');
-    
+
     app.innerHTML = `
         <div class="admin-container">
             <div class="header">
@@ -260,8 +269,8 @@ function renderAdmin() {
 
             <div class="main-container">
                 <div class="category-header">
-                    <i class="fas fa-list"></i>
-                    GESTIÓN DE JETSKIS
+                    <span><i class="fas fa-list"></i>Gestión de Jetskis</span>
+                    <span id="jetskiCount"></span>
                 </div>
                 <div class="jetski-list" id="jetskiList">
                     <div class="no-data">
@@ -399,7 +408,11 @@ function renderJetskis() {
     
     // Agregar todos los elementos de una vez
     container.appendChild(fragment);
-    
+
+    // Actualizar contador
+    const countEl = document.getElementById('jetskiCount');
+    if (countEl) countEl.textContent = `${APP.jetskis.length} empresas`;
+
     console.log(`✅ [RENDER] ${APP.jetskis.length} jetskis renderizados exitosamente`);
 }
 
@@ -413,12 +426,24 @@ function createJetskiRow(jetski, index) {
     }
     
     if (APP.mode === 'visualizador') {
+        const statusHtml = jetski.estado === 'EMBARCANDO'
+            ? `<div class="zarpa-badge">
+                <svg width="30" height="17" viewBox="0 0 120 52" fill="none">
+                    <path d="M12 34 Q18 24 34 22 L72 18 Q92 16 108 24 L114 30 Q117 35 112 39 L96 43 Q78 47 50 47 Q26 47 15 43 Q9 40 12 34Z" fill="#fff"/>
+                    <path d="M42 19 L74 16 Q88 15 93 21 L91 23 Q77 18 72 19 L40 23Z" fill="rgba(0,60,180,.6)"/>
+                    <path d="M84 16 L88 7 M88 7 L82 5 M88 7 L94 5" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+                    <circle cx="77" cy="12" r="4" fill="rgba(0,60,180,.6)"/>
+                    <path d="M12 36 Q2 34 5 41 Q10 47 18 44" stroke="rgba(255,255,255,0.7)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <path d="M8 40 Q-2 42 3 48" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                </svg>
+                <span class="zarpa-text">Zarpando</span>
+               </div>`
+            : `<div class="jetski-status status-en-turno">En Turno</div>`;
+
         row.innerHTML = `
             <div class="jetski-number">${index + 1}</div>
             <div class="jetski-name">${jetski.nombre}</div>
-            <div class="jetski-status status-${jetski.estado.toLowerCase().replace(' ', '-')}">
-                ${jetski.estado}
-            </div>
+            <div class="jetski-status">${statusHtml}</div>
         `;
     } else {
         row.innerHTML = `
