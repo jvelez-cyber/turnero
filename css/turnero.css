@@ -684,13 +684,13 @@ body::after {
     .main-container { padding: 0 3vw 80px; }
     .timing-cols { display: none; }
 
-    .jetski-row { grid-template-columns: 64px 1fr auto; height: 58px; }
-    .jetski-number { width: 64px; min-width: 64px; font-size: 1.4rem; }
-    .jetski-name { font-size: .95rem; padding: 0 .5rem; }
-    .jetski-status { min-width: 100px; padding-right: .8rem; font-size: 11px; }
-    .status-en-turno, .status-embarcando { width: 90px; padding: 6px 8px; }
-    .zarpa-badge { width: 90px; padding: 6px 8px; gap: 5px; }
-    .zarpa-text { font-size: .6rem; }
+    .jetski-row { height: auto; min-height: 58px; padding: 10px 0; }
+    .jetski-number { width: 46px; min-width: 46px; font-size: 1.1rem; margin: 0 8px 0 10px; }
+    .jetski-name { font-size: .9rem; padding: 0 .5rem; white-space: normal; word-break: break-word; line-height: 1.3; }
+    .jetski-status { min-width: 88px; padding-right: .7rem; font-size: 11px; }
+    .status-en-turno, .status-embarcando { width: 82px; padding: 6px 6px; font-size: 10px; }
+    .zarpa-badge { width: 82px; padding: 6px 6px; gap: 4px; }
+    .zarpa-text { font-size: .58rem; }
 
     .admin-container .jetski-row {
         flex-direction: column; align-items: stretch;
