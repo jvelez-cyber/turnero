@@ -686,7 +686,11 @@ body::after {
 
     .jetski-row { grid-template-columns: 64px 1fr auto; height: 58px; }
     .jetski-number { width: 64px; min-width: 64px; font-size: 1.4rem; }
-    .jetski-name { font-size: 1rem; padding: 0 1rem; }
+    .jetski-name { font-size: .95rem; padding: 0 .5rem; }
+    .jetski-status { min-width: 100px; padding-right: .8rem; font-size: 11px; }
+    .status-en-turno, .status-embarcando { width: 90px; padding: 6px 8px; }
+    .zarpa-badge { width: 90px; padding: 6px 8px; gap: 5px; }
+    .zarpa-text { font-size: .6rem; }
 
     .admin-container .jetski-row {
         flex-direction: column; align-items: stretch;
@@ -700,8 +704,7 @@ body::after {
     .move-button.toggle-status { flex: 2; }
     .move-button.cancelar-zarpe { flex: 1.5; }
 
-    .bottom-clock { bottom: 10px; right: 10px; min-width: auto; padding: 10px 16px; }
-    .bottom-time { font-size: 1.5rem; }
+    .bottom-clock { display: none; }
     .admin-access-btn { bottom: 10px; left: 10px; }
     #alerts { top: auto; bottom: 80px; right: 10px; left: 10px; max-width: none; }
 }
@@ -710,6 +713,10 @@ body::after {
     .header-text { font-size: 1.15rem; }
     .jetski-row { grid-template-columns: 52px 1fr auto; height: 54px; }
     .jetski-number { width: 52px; min-width: 52px; font-size: 1.2rem; }
-    .zarpa-badge { padding: 5px 10px 5px 8px; }
-    .zarpa-text { font-size: .65rem; }
+    .jetski-name { font-size: .88rem; padding: 0 .4rem; }
+    .jetski-status { min-width: 84px; padding-right: .6rem; font-size: 10px; }
+    .status-en-turno, .status-embarcando { width: 80px; padding: 5px 6px; }
+    .zarpa-badge { width: 80px; padding: 5px 6px; gap: 4px; }
+    .zarpa-badge svg { width: 24px; height: 14px; }
+    .zarpa-text { font-size: .58rem; }
 }
